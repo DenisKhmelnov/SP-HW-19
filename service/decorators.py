@@ -7,7 +7,7 @@ from service.auth import generate_token
 
 def auth_required(func):
     def wrapper(*args, **kwargs):
-        token = request.headers.environ.get('AUTH_AUTHORIZATION').replace('Bearer', '')
+        token = request.headers.environ.get('HTTP_AUTHORIZATION', '').replace('Bearer ', '')
 
         if not token:
             return "Вы не передали токен в хедере"
@@ -19,14 +19,14 @@ def auth_required(func):
 
             return func(*args, **kwargs)
         except Exception as e:
-            print(e)
+            return "Ошибка валидации токена"
 
     return wrapper
 
 
 def admin_required(func):
     def wrapper(*args, **kwargs):
-        token = request.headers.environ.get('AUTH_AUTHORIZATION').replace('Bearer', '')
+        token = request.headers.environ.get('HTTP_AUTHORIZATION').replace('Bearer ', '')
 
         if not token:
             return "Вы не передали токен в хедере"
@@ -43,6 +43,6 @@ def admin_required(func):
 
             return func(*args, **kwargs)
         except Exception as e:
-            print(e)
+            return "Ошибка прав доступа"
 
     return wrapper
