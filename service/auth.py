@@ -11,8 +11,8 @@ def __generate_password_digest(password):
     return hashlib.pbkdf2_hmac(
         hash_name='sha256',
         password=password.encode('utf-8'),  # Convert the password to bytes
-        salt=current_app.config.PWD_HASH_SALT,
-        iterations=current_app.config.PWD_HASH_ITERATIONS
+        salt=current_app.config["PWD_HASH_SALT"],
+        iterations=current_app.config["PWD_HASH_ITERATIONS"]
     )
 
 
@@ -40,10 +40,12 @@ def generate_token(username, password_hash, password, is_refreshed=True):
     # access_token
     min15 = datetime.datetime.utcnow() + datetime.timedelta(minutes=current_app.config['TOKEN_EXPIRE_MINUTES'])
     data['exp'] = calendar.timegm(min15.timetuple())
-    access_token = jwt.encode(data, key=current_app.config['SECRET_KEY'], algorithm=current_app.config['ALGORITHM'])
+    access_token = jwt.encode(data,
+                              key=current_app.config['SECRET_KEY'],
+                              algorithm=current_app.config['ALGORITHM'])
 
     # refresh token
-    min_day = datetime.datetime.utcnow() + datetime.timedelta(minutes=current_app.config['TOKEN_EXPIRE_DAY'])
+    min_day = datetime.datetime.utcnow() + datetime.timedelta(minutes=current_app.config['TOKEN_EXPIRE_DAYS'])
     data['exp'] = calendar.timegm(min_day.timetuple())
     refresh_token = jwt.encode(data, key=current_app.config['SECRET_KEY'], algorithm=current_app.config['ALGORITHM'])
 

@@ -3,10 +3,10 @@ from flask_restx import Resource, Namespace
 from service import auth
 from implemented import user_service
 
-user_ns = Namespace('auth')
+auth_ns = Namespace('auth')
 
 
-@user_ns.route('/')
+@auth_ns.route('/')
 class AuthView(Resource):
     def post(self):
         req_json = request.json
